@@ -3,13 +3,17 @@ package tgbot.router_service.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import tgbot.users.service.GetAllTeamsResponse;
+import tgbot.users.service.GetBooleanResponse;
 import tgbot.users.service.GetTeamResponse;
 import tgbot.users.service.TeamDTO;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class TeamClientTest {
+class TeamClientIT {
 
     @Autowired
     private TeamClient teamClient;
@@ -25,14 +29,26 @@ class TeamClientTest {
 
     @Test
     void getAllTeams() {
+        GetAllTeamsResponse allTeamsResponse = teamClient.getAllTeams();
+        List<TeamDTO> teamsList = allTeamsResponse.getTeamsList();
 
+        assertNotNull(teamsList);
+        assertTrue(teamsList.size() > 0);
     }
 
     @Test
-    void saveTeam() {
-    }
+    void saveAndDeleteTeam() {
+        TeamDTO teamDTO = new TeamDTO();
+        teamDTO.setTeamName("New team");
+        teamDTO.setTeamColor("New color");
 
-    @Test
-    void deleteTeamById() {
+        GetTeamResponse teamResponse = teamClient.saveTeam(teamDTO);
+        TeamDTO saved = teamResponse.getTeamDTO();
+
+        assertEquals("New team", saved.getTeamName());
+        assertEquals("New color", saved.getTeamColor());
+
+        GetBooleanResponse booleanResponse = teamClient.deleteTeamById(saved.getId());
+        assertTrue(booleanResponse.isDeleted());
     }
 }

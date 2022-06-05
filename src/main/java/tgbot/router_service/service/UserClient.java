@@ -1,4 +1,4 @@
-package tgbot.management_service.service;
+package tgbot.router_service.service;
 
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
@@ -39,7 +39,7 @@ public class UserClient extends WebServiceGatewaySupport {
                         new SoapActionCallback(NAMESPACE_URI + "/SaveUserRequest"));
     }
 
-    public GetBooleanResponse deleteUser(long chatId) {
+    public GetBooleanResponse deleteUserById(long chatId) {
         DeleteUserByIdRequest deleteUserByIdRequest = new DeleteUserByIdRequest();
         deleteUserByIdRequest.setChatId(chatId);
         return (GetBooleanResponse) getWebServiceTemplate()

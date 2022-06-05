@@ -1,4 +1,4 @@
-package tgbot.management_service.service;
+package tgbot.router_service.service;
 
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.soap.client.core.SoapActionCallback;

@@ -1,10 +1,11 @@
-package tgbot.management_service.conf;
+package tgbot.router_service.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-import tgbot.management_service.service.TeamClient;
-import tgbot.management_service.service.UserClient;
+import tgbot.router_service.service.TeamClient;
+import tgbot.router_service.service.UserClient;
+
 
 @Configuration
 public class UserConfiguration {
