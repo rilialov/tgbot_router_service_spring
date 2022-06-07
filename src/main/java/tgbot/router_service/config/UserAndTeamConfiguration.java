@@ -8,7 +8,7 @@ import tgbot.router_service.service.UserClient;
 
 
 @Configuration
-public class UserConfiguration {
+public class UserAndTeamConfiguration {
 
     @Bean
     public Jaxb2Marshaller marshaller() {
