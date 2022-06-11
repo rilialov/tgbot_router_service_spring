@@ -2,63 +2,64 @@ package tgbot.router_service.service;
 
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import tgbot.router_service.model.Task;
+import tgbot.router_service.model.Report;
 
 import java.util.List;
 
-public class TaskClient {
+public class ReportClient {
 
     private static final String SERVER_ADDRESS = "http://localhost:8081";
 
     private static final WebClient webClient = WebClient.create(SERVER_ADDRESS);
 
-    private static final String TASKS_URI = "/tasks/";
+    private static final String REPORTS_URI = "/reports/";
 
-    public static Task getTask(String id) {
+    public static Report getReport(String id) {
         return webClient
                 .get()
-                .uri(TASKS_URI + id)
+                .uri(REPORTS_URI + id)
                 .retrieve()
-                .bodyToMono(Task.class)
+                .bodyToMono(Report.class)
                 .block();
     }
 
-    public static List<Task> getAllTasks() {
+    public static List<Report> getAllReports() {
         return webClient
                 .get()
-                .uri(TASKS_URI)
+                .uri(REPORTS_URI)
                 .retrieve()
-                .bodyToFlux(Task.class)
+                .bodyToFlux(Report.class)
                 .collectList()
                 .block();
     }
 
-    public static Task createTask(Task task) {
+    public static Report createReport(Report report) {
         return webClient
                 .post()
-                .uri(TASKS_URI)
-                .body(Mono.just(task), Task.class)
+                .uri(REPORTS_URI)
+                .body(Mono.just(report), Report.class)
                 .retrieve()
-                .bodyToMono(Task.class)
+                .bodyToMono(Report.class)
                 .block();
     }
 
-    public static void updateTask(String id, Task task) {
+    public static void updateReport(String id, Report report) {
         webClient
                 .put()
-                .uri(TASKS_URI + id)
-                .body(Mono.just(task), Task.class)
+                .uri(REPORTS_URI + id)
+                .body(Mono.just(report), Report.class)
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();
     }
 
-    public static void deleteTask(long id) {
+    public static void deleteReport(long id) {
         webClient
                 .delete()
-                .uri(TASKS_URI + id)
+                .uri(REPORTS_URI + id)
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();
     }
+
 }
