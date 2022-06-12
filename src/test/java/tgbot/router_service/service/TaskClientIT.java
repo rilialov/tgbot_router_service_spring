@@ -1,6 +1,5 @@
 package tgbot.router_service.service;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import tgbot.router_service.model.Task;
@@ -50,11 +49,10 @@ class TaskClientIT {
     }
 
     @Test
-    @Disabled
     void deleteTask() {
-        TaskClient.deleteTask(3);
+        TaskClient.deleteTask(4);
 
-        Task deleted = TaskClient.getTask("3");
-        assertNull(deleted);
+        Task deleted = TaskClient.getTask("4");
+        assertEquals(0L, deleted.getId());
     }
 }

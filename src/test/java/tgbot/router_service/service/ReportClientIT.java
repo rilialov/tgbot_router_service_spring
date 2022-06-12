@@ -1,6 +1,5 @@
 package tgbot.router_service.service;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import tgbot.router_service.model.Report;
@@ -49,11 +48,10 @@ class ReportClientIT {
     }
 
     @Test
-    @Disabled
     void deleteReport() {
         ReportClient.deleteReport(10L);
 
         Report deleted = ReportClient.getReport("10");
-        assertNull(deleted);
+        assertEquals(0L, deleted.getId());
     }
 }
