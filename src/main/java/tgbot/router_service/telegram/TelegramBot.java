@@ -2,6 +2,7 @@ package tgbot.router_service.telegram;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -9,11 +10,13 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import tgbot.router_service.telegram.handlers.CallbackQueryHandler;
 import tgbot.router_service.telegram.handlers.MessageHandler;
 
+@Service
 @PropertySource("/telegram.properties")
 public class TelegramBot extends TelegramLongPollingBot {
 
     @Value( "${botName}" )
     private String botName;
+
     @Value( "${botToken}" )
     private String botToken;
 
@@ -24,7 +27,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     public TelegramBot(MessageHandler messageHandler, CallbackQueryHandler callbackQueryHandler) {
         this.messageHandler = messageHandler;
         this.callbackQueryHandler = callbackQueryHandler;
-
     }
 
     @Override
@@ -56,6 +58,5 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
         }
     }
-
 
 }

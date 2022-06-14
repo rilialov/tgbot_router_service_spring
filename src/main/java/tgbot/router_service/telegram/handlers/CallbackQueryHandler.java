@@ -1,5 +1,6 @@
 package tgbot.router_service.telegram.handlers;
 
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -10,6 +11,7 @@ import tgbot.router_service.telegram.util.UserCommandsCache;
 import tgbot.users.service.GetUserResponse;
 import tgbot.users.service.UserDTO;
 
+@Service
 public class CallbackQueryHandler {
     private final KeyboardsMaker keyboardsMaker;
     private final UserClient userClient;
@@ -87,7 +89,16 @@ public class CallbackQueryHandler {
     private SendMessage addUsers(String chatId, User user) {
         GetUserResponse response = userClient.getUserById(Long.parseLong(chatId));
         UserDTO userDTO = response.getUserDTO();
-        if (userDTO.getChatID() == 0) {
+        if (userDTO == null) {
+            UserDTO newUserDTO = new UserDTO();
+            newUserDTO.setChatID(Long.parseLong(chatId));
+            newUserDTO.setFirstName(user.getFirstName());
+            newUserDTO.setNickname(user.getUserName());
+            newUserDTO.setLastName(user.getLastName());
+            userClient.saveUser(newUserDTO);
+        } else {
+            userDTO.setNickname(user.getUserName());
+            userDTO.setLastName(user.getLastName());
             userClient.saveUser(userDTO);
         }
 

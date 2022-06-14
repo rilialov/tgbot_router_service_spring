@@ -1,5 +1,6 @@
 package tgbot.router_service.telegram.handlers;
 
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -14,7 +15,7 @@ import tgbot.router_service.telegram.util.UserCommandsCache;
 import tgbot.users.service.GetUserResponse;
 import tgbot.users.service.UserDTO;
 
-
+@Service
 public class MessageHandler {
     private final KeyboardsMaker keyboardsMaker;
     private final UserClient userClient;
@@ -47,8 +48,13 @@ public class MessageHandler {
     private SendMessage getStartMessage(String chatId, User user) {
         GetUserResponse response = userClient.getUserById(Long.parseLong(chatId));
         UserDTO userDTO = response.getUserDTO();
-        if (userDTO.getChatID() == 0) {
-            userClient.saveUser(userDTO);
+        if (userDTO == null) {
+            UserDTO newUserDTO = new UserDTO();
+            newUserDTO.setChatID(Long.parseLong(chatId));
+            newUserDTO.setFirstName(user.getFirstName());
+            newUserDTO.setNickname(user.getUserName());
+            newUserDTO.setLastName(user.getLastName());
+            userClient.saveUser(newUserDTO);
         } else {
             userDTO.setNickname(user.getUserName());
             userDTO.setLastName(user.getLastName());
@@ -83,6 +89,5 @@ public class MessageHandler {
         answer.setText("Success! Tracking updated.");
         return answer;
     }
-
 
 }
