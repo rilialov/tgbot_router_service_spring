@@ -8,13 +8,15 @@ import java.util.List;
 
 public class ReportClient {
 
-    private static final String SERVER_ADDRESS = "http://localhost:8081";
+    private WebClient webClient;
 
-    private static final WebClient webClient = WebClient.create(SERVER_ADDRESS);
+    private final String REPORTS_URI = "/reports/";
 
-    private static final String REPORTS_URI = "/reports/";
+    public void setParameters(String address) {
+        webClient = WebClient.create(address);
+    }
 
-    public static Report getReport(String id) {
+    public Report getReport(String id) {
         return webClient
                 .get()
                 .uri(REPORTS_URI + id)
@@ -23,7 +25,7 @@ public class ReportClient {
                 .block();
     }
 
-    public static List<Report> getAllReports() {
+    public List<Report> getAllReports() {
         return webClient
                 .get()
                 .uri(REPORTS_URI)
@@ -33,7 +35,7 @@ public class ReportClient {
                 .block();
     }
 
-    public static Report createReport(Report report) {
+    public Report createReport(Report report) {
         return webClient
                 .post()
                 .uri(REPORTS_URI)
@@ -43,7 +45,7 @@ public class ReportClient {
                 .block();
     }
 
-    public static void updateReport(String id, Report report) {
+    public void updateReport(String id, Report report) {
         webClient
                 .put()
                 .uri(REPORTS_URI + id)
@@ -53,7 +55,7 @@ public class ReportClient {
                 .block();
     }
 
-    public static void deleteReport(long id) {
+    public void deleteReport(long id) {
         webClient
                 .delete()
                 .uri(REPORTS_URI + id)

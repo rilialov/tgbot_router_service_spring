@@ -1,18 +1,23 @@
 package tgbot.router_service.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
 import tgbot.users.service.*;
 
 public class UserClient extends WebServiceGatewaySupport {
-    private final String USERS_URI = "http://localhost:8080/ws/users";
-    private final String NAMESPACE_URI = "http://users.tgbot/service";
+
+    @Value("${clients.server.uri}")
+    private String SERVER_URI;
+
+    @Value("${clients.namespace.uri}")
+    private String NAMESPACE_URI;
 
     public GetUserResponse getUserById(long chatId) {
         GetUserByIdRequest getUserByIdRequest = new GetUserByIdRequest();
         getUserByIdRequest.setChatId(chatId);
         return (GetUserResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(USERS_URI, getUserByIdRequest,
+                .marshalSendAndReceive(SERVER_URI, getUserByIdRequest,
                         new SoapActionCallback(NAMESPACE_URI + "/GetUserByIdRequest"));
     }
 
@@ -20,14 +25,14 @@ public class UserClient extends WebServiceGatewaySupport {
         GetUserByNickRequest getUserByNickRequest = new GetUserByNickRequest();
         getUserByNickRequest.setNickname(nickname);
         return (GetUserResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(USERS_URI, getUserByNickRequest,
+                .marshalSendAndReceive(SERVER_URI, getUserByNickRequest,
                         new SoapActionCallback(NAMESPACE_URI + "/GetUserByNickRequest"));
     }
 
     public GetAllUsersResponse getAllUsers() {
         GetAllUsersRequest getUsersRequest = new GetAllUsersRequest();
         return (GetAllUsersResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(USERS_URI, getUsersRequest,
+                .marshalSendAndReceive(SERVER_URI, getUsersRequest,
                         new SoapActionCallback(NAMESPACE_URI + "/GetUsersRequest"));
     }
 
@@ -35,7 +40,7 @@ public class UserClient extends WebServiceGatewaySupport {
         SaveUserRequest saveUserRequest = new SaveUserRequest();
         saveUserRequest.setUserDTO(userDTO);
         return (GetUserResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(USERS_URI, saveUserRequest,
+                .marshalSendAndReceive(SERVER_URI, saveUserRequest,
                         new SoapActionCallback(NAMESPACE_URI + "/SaveUserRequest"));
     }
 
@@ -43,7 +48,7 @@ public class UserClient extends WebServiceGatewaySupport {
         DeleteUserByIdRequest deleteUserByIdRequest = new DeleteUserByIdRequest();
         deleteUserByIdRequest.setChatId(chatId);
         return (GetBooleanResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(USERS_URI, deleteUserByIdRequest,
+                .marshalSendAndReceive(SERVER_URI, deleteUserByIdRequest,
                         new SoapActionCallback(NAMESPACE_URI + "/DeleteUserByIdRequest"));
     }
 }

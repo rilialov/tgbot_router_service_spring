@@ -18,11 +18,19 @@ import tgbot.users.service.UserDTO;
 @Service
 public class MessageHandler {
     private final KeyboardsMaker keyboardsMaker;
+
     private final UserClient userClient;
 
-    public MessageHandler(KeyboardsMaker keyboardsMaker, UserClient userClient) {
+    private final TaskClient taskClient;
+
+    private final TrackingClient trackingClient;
+
+    public MessageHandler(KeyboardsMaker keyboardsMaker, UserClient userClient, TaskClient taskClient,
+                          TrackingClient trackingClient) {
         this.keyboardsMaker = keyboardsMaker;
         this.userClient = userClient;
+        this.taskClient = taskClient;
+        this.trackingClient = trackingClient;
     }
 
     public SendMessage processMessage(Message message) {
@@ -68,9 +76,9 @@ public class MessageHandler {
     }
 
     private SendMessage getTrackingCreationMessage(String chatId, User user, String trackingNote) {
-        Task task = TaskClient.getTask("1");
+        Task task = taskClient.getTask("1");
         Tracking tracking = new Tracking(trackingNote, task, user.getId());
-        TrackingClient.createTracking(tracking);
+        trackingClient.createTracking(tracking);
 
         SendMessage answer = new SendMessage();
         answer.setChatId(chatId);
@@ -80,9 +88,9 @@ public class MessageHandler {
 
     private SendMessage getTrackingUpdatingMessage(String chatId, String trackingNote) {
         String argument = UserCommandsCache.getArgument(new TelegramUser(chatId));
-        Tracking tracking = TrackingClient.getTracking(argument);
+        Tracking tracking = trackingClient.getTracking(argument);
         tracking.setTrackingNote(trackingNote);
-        TrackingClient.updateTracking(String.valueOf(tracking.getId()), tracking);
+        trackingClient.updateTracking(String.valueOf(tracking.getId()), tracking);
 
         SendMessage answer = new SendMessage();
         answer.setChatId(chatId);

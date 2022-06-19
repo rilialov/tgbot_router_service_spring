@@ -1,6 +1,7 @@
 package tgbot.router_service.service;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import tgbot.router_service.model.Report;
 
@@ -12,16 +13,19 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class ReportClientIT {
 
+    @Autowired
+    private ReportClient reportClient;
+
     @Test
     void getReport() {
-        Report report = ReportClient.getReport("2");
+        Report report = reportClient.getReport("2");
 
         assertEquals(864000L, report.getFullTime());
     }
 
     @Test
     void getAllReports() {
-        List<Report> allReports = ReportClient.getAllReports();
+        List<Report> allReports = reportClient.getAllReports();
 
         assertNotNull(allReports);
         assertTrue(allReports.size() > 0);
@@ -31,27 +35,27 @@ class ReportClientIT {
     void createReport() {
         Report report = new Report(LocalDate.now(), 2L);
 
-        Report created = ReportClient.createReport(report);
+        Report created = reportClient.createReport(report);
 
         assertEquals(2L, created.getUser());
     }
 
     @Test
     void updateReport() {
-        Report report = ReportClient.getReport("1");
+        Report report = reportClient.getReport("1");
 
         report.setFullTime(888000L);
-        ReportClient.updateReport("1", report);
+        reportClient.updateReport("1", report);
 
-        Report updated = ReportClient.getReport("1");
+        Report updated = reportClient.getReport("1");
         assertEquals(888000L, updated.getFullTime());
     }
 
     @Test
     void deleteReport() {
-        ReportClient.deleteReport(10L);
+        reportClient.deleteReport(10L);
 
-        Report deleted = ReportClient.getReport("10");
+        Report deleted = reportClient.getReport("10");
         assertEquals(0L, deleted.getId());
     }
 }

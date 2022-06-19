@@ -8,13 +8,15 @@ import java.util.List;
 
 public class TaskClient {
 
-    private static final String SERVER_ADDRESS = "http://localhost:8081";
-
-    private static final WebClient webClient = WebClient.create(SERVER_ADDRESS);
+    private WebClient webClient;
 
     private static final String TASKS_URI = "/tasks/";
 
-    public static Task getTask(String id) {
+    public void setParameters(String address) {
+        webClient = WebClient.create(address);
+    }
+
+    public Task getTask(String id) {
         return webClient
                 .get()
                 .uri(TASKS_URI + id)
@@ -23,7 +25,7 @@ public class TaskClient {
                 .block();
     }
 
-    public static List<Task> getAllTasks() {
+    public List<Task> getAllTasks() {
         return webClient
                 .get()
                 .uri(TASKS_URI)
@@ -33,7 +35,7 @@ public class TaskClient {
                 .block();
     }
 
-    public static Task createTask(Task task) {
+    public Task createTask(Task task) {
         return webClient
                 .post()
                 .uri(TASKS_URI)
@@ -43,7 +45,7 @@ public class TaskClient {
                 .block();
     }
 
-    public static void updateTask(String id, Task task) {
+    public void updateTask(String id, Task task) {
         webClient
                 .put()
                 .uri(TASKS_URI + id)
@@ -53,7 +55,7 @@ public class TaskClient {
                 .block();
     }
 
-    public static void deleteTask(long id) {
+    public void deleteTask(long id) {
         webClient
                 .delete()
                 .uri(TASKS_URI + id)

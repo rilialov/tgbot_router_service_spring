@@ -1,14 +1,17 @@
 package tgbot.router_service.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import tgbot.router_service.service.TeamClient;
 import tgbot.router_service.service.UserClient;
 
-
 @Configuration
-public class UserAndTeamConfiguration {
+public class UsersServiceClientsConfiguration {
+
+    @Value("${user.configuration.uri}")
+    private String DEFAULT_URI;
 
     @Bean
     public Jaxb2Marshaller marshaller() {
@@ -20,7 +23,7 @@ public class UserAndTeamConfiguration {
     @Bean
     public UserClient userClient(Jaxb2Marshaller marshaller) {
         UserClient client = new UserClient();
-        client.setDefaultUri("http://localhost:8080/ws");
+        client.setDefaultUri(DEFAULT_URI);
         client.setMarshaller(marshaller);
         client.setUnmarshaller(marshaller);
         return client;
@@ -29,7 +32,7 @@ public class UserAndTeamConfiguration {
     @Bean
     public TeamClient teamClient(Jaxb2Marshaller marshaller) {
         TeamClient client = new TeamClient();
-        client.setDefaultUri("http://localhost:8080/ws");
+        client.setDefaultUri(DEFAULT_URI);
         client.setMarshaller(marshaller);
         client.setUnmarshaller(marshaller);
         return client;

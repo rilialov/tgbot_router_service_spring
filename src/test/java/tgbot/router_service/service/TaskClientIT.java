@@ -1,6 +1,7 @@
 package tgbot.router_service.service;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import tgbot.router_service.model.Task;
 
@@ -11,16 +12,19 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class TaskClientIT {
 
+    @Autowired
+    private TaskClient taskClient;
+
     @Test
     void getTask() {
-        Task task = TaskClient.getTask("1");
+        Task task = taskClient.getTask("1");
 
         assertEquals("Create Service connected to telegram", task.getTaskName());
     }
 
     @Test
     void getAllTask() {
-        List<Task> allTasks = TaskClient.getAllTasks();
+        List<Task> allTasks = taskClient.getAllTasks();
 
         assertNotNull(allTasks);
         assertTrue(allTasks.size() > 0);
@@ -31,7 +35,7 @@ class TaskClientIT {
     void createTask() {
         Task task = new Task("Test Task Name", "Test Task Note");
 
-        Task created = TaskClient.createTask(task);
+        Task created = taskClient.createTask(task);
 
         assertEquals("Test Task Name", created.getTaskName());
         assertEquals("Test Task Note", created.getTaskNote());
@@ -39,20 +43,20 @@ class TaskClientIT {
 
     @Test
     void updateTask() {
-        Task task = TaskClient.getTask("2");
+        Task task = taskClient.getTask("2");
 
         task.setTaskNote("Changed Note");
-        TaskClient.updateTask("2", task);
+        taskClient.updateTask("2", task);
 
-        Task updated = TaskClient.getTask("2");
+        Task updated = taskClient.getTask("2");
         assertEquals("Changed Note", updated.getTaskNote());
     }
 
     @Test
     void deleteTask() {
-        TaskClient.deleteTask(4);
+        taskClient.deleteTask(4);
 
-        Task deleted = TaskClient.getTask("4");
+        Task deleted = taskClient.getTask("4");
         assertEquals(0L, deleted.getId());
     }
 }

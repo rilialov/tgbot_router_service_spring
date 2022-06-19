@@ -14,11 +14,16 @@ import tgbot.users.service.UserDTO;
 @Service
 public class CallbackQueryHandler {
     private final KeyboardsMaker keyboardsMaker;
+
     private final UserClient userClient;
 
-    public CallbackQueryHandler(KeyboardsMaker keyboardsMaker, UserClient userClient) {
+    private final TrackingMessagesHandler trackingMessagesHandler;
+
+    public CallbackQueryHandler(KeyboardsMaker keyboardsMaker, UserClient userClient,
+                                TrackingMessagesHandler trackingMessagesHandler) {
         this.keyboardsMaker = keyboardsMaker;
         this.userClient = userClient;
+        this.trackingMessagesHandler = trackingMessagesHandler;
     }
 
     public SendMessage processCallbackQuery(CallbackQuery callbackQuery) {
@@ -36,23 +41,23 @@ public class CallbackQueryHandler {
             case "track":
                 return manageTrackings(chatId);
             case "createTracking":
-                return TrackingMessagesHandler.createTracking(chatId);
+                return trackingMessagesHandler.createTracking(chatId);
             case "updateTracking":
-                return TrackingMessagesHandler.listTracking(chatId, "updateTracking", "update");
+                return trackingMessagesHandler.listTracking(chatId, "updateTracking", "update");
             case "deleteTracking":
-                return TrackingMessagesHandler.listTracking(chatId, "deleteTracking", "delete");
+                return trackingMessagesHandler.listTracking(chatId, "deleteTracking", "delete");
             case "closeTracking":
-                return TrackingMessagesHandler.listTracking(chatId, "closeTracking", "close");
+                return trackingMessagesHandler.listTracking(chatId, "closeTracking", "close");
             default:
                 if (!command.equals("")) {
                     if (command.equals("updateTracking")) {
-                        return TrackingMessagesHandler.updateTracking(chatId, callbackQuery.getData());
+                        return trackingMessagesHandler.updateTracking(chatId, callbackQuery.getData());
                     }
                     if (command.equals("deleteTracking")) {
-                        return TrackingMessagesHandler.deleteTracking(chatId, callbackQuery.getData());
+                        return trackingMessagesHandler.deleteTracking(chatId, callbackQuery.getData());
                     }
                     if (command.equals("closeTracking")) {
-                        return TrackingMessagesHandler.closeTracking(chatId, callbackQuery.getData());
+                        return trackingMessagesHandler.closeTracking(chatId, callbackQuery.getData());
                     }
                 }
                 SendMessage answer = new SendMessage();
