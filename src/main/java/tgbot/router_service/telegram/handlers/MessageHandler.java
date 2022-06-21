@@ -15,6 +15,9 @@ import tgbot.router_service.telegram.util.UserCommandsCache;
 import tgbot.users.service.GetUserResponse;
 import tgbot.users.service.UserDTO;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 @Service
 public class MessageHandler {
     private final KeyboardsMaker keyboardsMaker;
@@ -24,6 +27,8 @@ public class MessageHandler {
     private final TaskClient taskClient;
 
     private final TrackingClient trackingClient;
+
+    private final ResourceBundle messages = ResourceBundle.getBundle("i18n/messages", new Locale("en"));
 
     public MessageHandler(KeyboardsMaker keyboardsMaker, UserClient userClient, TaskClient taskClient,
                           TrackingClient trackingClient) {
@@ -47,10 +52,7 @@ public class MessageHandler {
                 return getTrackingUpdatingMessage(chatId, message.getText());
             }
         }
-        SendMessage answer = new SendMessage();
-        answer.setChatId(chatId);
-        answer.setText("I don't know what to do..");
-        return answer;
+        return getSendMessage(chatId, messages.getString("unknown.message"));
     }
 
     private SendMessage getStartMessage(String chatId, User user) {
@@ -68,10 +70,10 @@ public class MessageHandler {
             userDTO.setLastName(user.getLastName());
             userClient.saveUser(userDTO);
         }
-        SendMessage answer = new SendMessage();
+
+        SendMessage answer = getSendMessage(chatId, messages.getString("hi.message") + ", " +
+                user.getFirstName() + "! " + messages.getString("choose.message"));
         answer.setReplyMarkup(keyboardsMaker.getStartKeyboard());
-        answer.setChatId(chatId);
-        answer.setText("Hi, " + user.getFirstName() + "! Please choose an action:");
         return answer;
     }
 
@@ -79,11 +81,7 @@ public class MessageHandler {
         Task task = taskClient.getTask("1");
         Tracking tracking = new Tracking(trackingNote, task, user.getId());
         trackingClient.createTracking(tracking);
-
-        SendMessage answer = new SendMessage();
-        answer.setChatId(chatId);
-        answer.setText("Success! Tracking created.");
-        return answer;
+        return getSendMessage(chatId, "Success! Tracking created.");
     }
 
     private SendMessage getTrackingUpdatingMessage(String chatId, String trackingNote) {
@@ -91,10 +89,13 @@ public class MessageHandler {
         Tracking tracking = trackingClient.getTracking(argument);
         tracking.setTrackingNote(trackingNote);
         trackingClient.updateTracking(String.valueOf(tracking.getId()), tracking);
+        return getSendMessage(chatId, "Success! Tracking updated.");
+    }
 
+    private SendMessage getSendMessage(String chatId, String text) {
         SendMessage answer = new SendMessage();
         answer.setChatId(chatId);
-        answer.setText("Success! Tracking updated.");
+        answer.setText(text);
         return answer;
     }
 

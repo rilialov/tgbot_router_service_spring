@@ -11,6 +11,9 @@ import tgbot.router_service.telegram.util.UserCommandsCache;
 import tgbot.users.service.GetUserResponse;
 import tgbot.users.service.UserDTO;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 @Service
 public class CallbackQueryHandler {
     private final KeyboardsMaker keyboardsMaker;
@@ -18,6 +21,8 @@ public class CallbackQueryHandler {
     private final UserClient userClient;
 
     private final TrackingMessagesHandler trackingMessagesHandler;
+
+    private final ResourceBundle messages = ResourceBundle.getBundle("i18n/messages", new Locale("en"));
 
     public CallbackQueryHandler(KeyboardsMaker keyboardsMaker, UserClient userClient,
                                 TrackingMessagesHandler trackingMessagesHandler) {
@@ -60,33 +65,24 @@ public class CallbackQueryHandler {
                         return trackingMessagesHandler.closeTracking(chatId, callbackQuery.getData());
                     }
                 }
-                SendMessage answer = new SendMessage();
-                answer.setChatId(chatId);
-                answer.setText("I don't know what to do..");
-                return answer;
+                return getSendMessage(chatId, messages.getString("unknown.message"));
         }
     }
 
     private SendMessage manageTrackings(String chatId) {
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chatId);
-        sendMessage.setText("Please choose an action from keyboard");
+        SendMessage sendMessage = getSendMessage(chatId, messages.getString("choose.message"));
         sendMessage.setReplyMarkup(keyboardsMaker.getTrackingKeyboard());
         return sendMessage;
     }
 
     private SendMessage getAdministration(String chatId) {
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chatId);
-        sendMessage.setText("Please choose an action from keyboard");
+        SendMessage sendMessage = getSendMessage(chatId, messages.getString("choose.message"));
         sendMessage.setReplyMarkup(keyboardsMaker.getAdministrationKeyboard());
         return sendMessage;
     }
 
     private SendMessage manageUsers(String chatId) {
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chatId);
-        sendMessage.setText("Please choose an action from keyboard");
+        SendMessage sendMessage = getSendMessage(chatId, messages.getString("choose.message"));
         sendMessage.setReplyMarkup(keyboardsMaker.getUserKeyboard());
         return sendMessage;
     }
@@ -107,9 +103,13 @@ public class CallbackQueryHandler {
             userClient.saveUser(userDTO);
         }
 
+        return getSendMessage(chatId, messages.getString("user.add.message"));
+    }
+
+    private SendMessage getSendMessage(String chatId, String text) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
-        sendMessage.setText("Success! User added.");
+        sendMessage.setText(text);
         return sendMessage;
     }
 }
