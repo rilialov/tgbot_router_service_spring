@@ -60,6 +60,6 @@ class TrackingClientIT {
         trackingClient.deleteTracking(7L);
 
         Tracking deleted = trackingClient.getTracking("7");
-        assertEquals(0L, deleted.getId());
+        assertNull(deleted);
     }
 }

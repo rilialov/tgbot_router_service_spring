@@ -57,6 +57,6 @@ class TaskClientIT {
         taskClient.deleteTask(4);
 
         Task deleted = taskClient.getTask("4");
-        assertEquals(0L, deleted.getId());
+        assertNull(deleted);
     }
 }

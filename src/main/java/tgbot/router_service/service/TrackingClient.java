@@ -1,6 +1,7 @@
 package tgbot.router_service.service;
 
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 import tgbot.router_service.model.Tracking;
 
@@ -22,6 +23,8 @@ public class TrackingClient {
                 .uri(TRACKINGS_URI + id)
                 .retrieve()
                 .bodyToMono(Tracking.class)
+                .onErrorResume(WebClientResponseException.class,
+                        ex -> ex.getRawStatusCode() == 404 ? Mono.empty() : Mono.error(ex))
                 .block();
     }
 

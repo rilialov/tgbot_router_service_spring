@@ -56,6 +56,6 @@ class ReportClientIT {
         reportClient.deleteReport(10L);
 
         Report deleted = reportClient.getReport("10");
-        assertEquals(0L, deleted.getId());
+        assertNull(deleted);
     }
 }
