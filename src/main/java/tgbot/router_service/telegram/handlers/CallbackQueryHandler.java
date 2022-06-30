@@ -1,6 +1,5 @@
 package tgbot.router_service.telegram.handlers;
 
-import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -11,10 +10,8 @@ import tgbot.router_service.telegram.util.UserCommandsCache;
 import tgbot.users.service.GetUserResponse;
 import tgbot.users.service.UserDTO;
 
-import java.util.Locale;
 import java.util.ResourceBundle;
 
-@Service
 public class CallbackQueryHandler {
     private final KeyboardsMaker keyboardsMaker;
 
@@ -22,13 +19,14 @@ public class CallbackQueryHandler {
 
     private final TrackingMessagesHandler trackingMessagesHandler;
 
-    private final ResourceBundle messages = ResourceBundle.getBundle("i18n/messages", new Locale("en"));
+    private final ResourceBundle resourceBundle;
 
     public CallbackQueryHandler(KeyboardsMaker keyboardsMaker, UserClient userClient,
-                                TrackingMessagesHandler trackingMessagesHandler) {
+                                TrackingMessagesHandler trackingMessagesHandler, ResourceBundle resourceBundle) {
         this.keyboardsMaker = keyboardsMaker;
         this.userClient = userClient;
         this.trackingMessagesHandler = trackingMessagesHandler;
+        this.resourceBundle = resourceBundle;
     }
 
     public SendMessage processCallbackQuery(CallbackQuery callbackQuery) {
@@ -48,11 +46,11 @@ public class CallbackQueryHandler {
             case "createTracking":
                 return trackingMessagesHandler.createTracking(chatId);
             case "updateTracking":
-                return trackingMessagesHandler.listTracking(chatId, "updateTracking", "update");
+                return trackingMessagesHandler.listTracking(chatId, "updateTracking", resourceBundle.getString("message.update"));
             case "deleteTracking":
-                return trackingMessagesHandler.listTracking(chatId, "deleteTracking", "delete");
+                return trackingMessagesHandler.listTracking(chatId, "deleteTracking", resourceBundle.getString("message.delete"));
             case "closeTracking":
-                return trackingMessagesHandler.listTracking(chatId, "closeTracking", "close");
+                return trackingMessagesHandler.listTracking(chatId, "closeTracking", resourceBundle.getString("message.close"));
             default:
                 if (!command.equals("")) {
                     if (command.equals("updateTracking")) {
@@ -65,24 +63,24 @@ public class CallbackQueryHandler {
                         return trackingMessagesHandler.closeTracking(chatId, callbackQuery.getData());
                     }
                 }
-                return getSendMessage(chatId, messages.getString("unknown.message"));
+                return getSendMessage(chatId, resourceBundle.getString("message.unknown"));
         }
     }
 
     private SendMessage manageTrackings(String chatId) {
-        SendMessage sendMessage = getSendMessage(chatId, messages.getString("choose.message"));
+        SendMessage sendMessage = getSendMessage(chatId, resourceBundle.getString("message.choose"));
         sendMessage.setReplyMarkup(keyboardsMaker.getTrackingKeyboard());
         return sendMessage;
     }
 
     private SendMessage getAdministration(String chatId) {
-        SendMessage sendMessage = getSendMessage(chatId, messages.getString("choose.message"));
+        SendMessage sendMessage = getSendMessage(chatId, resourceBundle.getString("message.choose"));
         sendMessage.setReplyMarkup(keyboardsMaker.getAdministrationKeyboard());
         return sendMessage;
     }
 
     private SendMessage manageUsers(String chatId) {
-        SendMessage sendMessage = getSendMessage(chatId, messages.getString("choose.message"));
+        SendMessage sendMessage = getSendMessage(chatId, resourceBundle.getString("message.choose"));
         sendMessage.setReplyMarkup(keyboardsMaker.getUserKeyboard());
         return sendMessage;
     }
@@ -103,7 +101,7 @@ public class CallbackQueryHandler {
             userClient.saveUser(userDTO);
         }
 
-        return getSendMessage(chatId, messages.getString("user.add.message"));
+        return getSendMessage(chatId, resourceBundle.getString("message.user.add"));
     }
 
     private SendMessage getSendMessage(String chatId, String text) {

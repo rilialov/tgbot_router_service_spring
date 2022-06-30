@@ -1,6 +1,5 @@
 package tgbot.router_service.telegram.handlers;
 
-import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -15,10 +14,8 @@ import tgbot.router_service.telegram.util.UserCommandsCache;
 import tgbot.users.service.GetUserResponse;
 import tgbot.users.service.UserDTO;
 
-import java.util.Locale;
 import java.util.ResourceBundle;
 
-@Service
 public class MessageHandler {
     private final KeyboardsMaker keyboardsMaker;
 
@@ -28,14 +25,15 @@ public class MessageHandler {
 
     private final TrackingClient trackingClient;
 
-    private final ResourceBundle messages = ResourceBundle.getBundle("i18n/messages", new Locale("en"));
+    private final ResourceBundle resourceBundle;
 
     public MessageHandler(KeyboardsMaker keyboardsMaker, UserClient userClient, TaskClient taskClient,
-                          TrackingClient trackingClient) {
+                          TrackingClient trackingClient, ResourceBundle resourceBundle) {
         this.keyboardsMaker = keyboardsMaker;
         this.userClient = userClient;
         this.taskClient = taskClient;
         this.trackingClient = trackingClient;
+        this.resourceBundle = resourceBundle;
     }
 
     public SendMessage processMessage(Message message) {
@@ -52,7 +50,7 @@ public class MessageHandler {
                 return getTrackingUpdatingMessage(chatId, message.getText());
             }
         }
-        return getSendMessage(chatId, messages.getString("unknown.message"));
+        return getSendMessage(chatId, resourceBundle.getString("message.unknown"));
     }
 
     private SendMessage getStartMessage(String chatId, User user) {
@@ -71,8 +69,8 @@ public class MessageHandler {
             userClient.saveUser(userDTO);
         }
 
-        SendMessage answer = getSendMessage(chatId, messages.getString("hi.message") + ", " +
-                user.getFirstName() + "! " + messages.getString("choose.message"));
+        SendMessage answer = getSendMessage(chatId, resourceBundle.getString("message.hi") + ", " +
+                user.getFirstName() + "! " + resourceBundle.getString("message.choose"));
         answer.setReplyMarkup(keyboardsMaker.getStartKeyboard());
         return answer;
     }
@@ -81,7 +79,7 @@ public class MessageHandler {
         Task task = taskClient.getTask("1");
         Tracking tracking = new Tracking(trackingNote, task, user.getId());
         trackingClient.createTracking(tracking);
-        return getSendMessage(chatId, "Success! Tracking created.");
+        return getSendMessage(chatId, resourceBundle.getString("message.tracking.created"));
     }
 
     private SendMessage getTrackingUpdatingMessage(String chatId, String trackingNote) {
@@ -89,7 +87,7 @@ public class MessageHandler {
         Tracking tracking = trackingClient.getTracking(argument);
         tracking.setTrackingNote(trackingNote);
         trackingClient.updateTracking(String.valueOf(tracking.getId()), tracking);
-        return getSendMessage(chatId, "Success! Tracking updated.");
+        return getSendMessage(chatId, resourceBundle.getString("message.tracking.updated"));
     }
 
     private SendMessage getSendMessage(String chatId, String text) {
