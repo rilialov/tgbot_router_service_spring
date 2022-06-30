@@ -22,8 +22,6 @@ import java.util.ResourceBundle;
 @Configuration
 public class TelegramBotConfiguration {
 
-    private final KeyboardsMaker keyboardsMaker;
-
     private final UserClient userClient;
 
     private final TaskClient taskClient;
@@ -34,10 +32,9 @@ public class TelegramBotConfiguration {
 
     private final ResourceBundle resourceBundle;
 
-    public TelegramBotConfiguration(KeyboardsMaker keyboardsMaker, UserClient userClient, TaskClient taskClient,
+    public TelegramBotConfiguration(UserClient userClient, TaskClient taskClient,
                                     TrackingClient trackingClient, TrackingUtil trackingUtil,
                                     @Value("${telegram.messages.language}") String language) {
-        this.keyboardsMaker = keyboardsMaker;
         this.userClient = userClient;
         this.taskClient = taskClient;
         this.trackingClient = trackingClient;
@@ -58,17 +55,24 @@ public class TelegramBotConfiguration {
     }
 
     @Bean
-    public MessageHandler messageHandler() {
-        return new MessageHandler(keyboardsMaker, userClient, taskClient, trackingClient, resourceBundle);
+    public KeyboardsMaker keyboardsMaker() {
+        return new KeyboardsMaker(resourceBundle);
     }
 
     @Bean
-    public CallbackQueryHandler callbackQueryHandler() {
-        return new CallbackQueryHandler(keyboardsMaker, userClient, trackingMessagesHandler(), resourceBundle);
+    public MessageHandler messageHandler(KeyboardsMaker keyboardsMaker) {
+        return new MessageHandler(keyboardsMaker, userClient, taskClient, trackingClient, resourceBundle);
     }
 
     @Bean
     public TrackingMessagesHandler trackingMessagesHandler() {
         return new TrackingMessagesHandler(trackingClient, trackingUtil, resourceBundle);
     }
+
+    @Bean
+    public CallbackQueryHandler callbackQueryHandler(KeyboardsMaker keyboardsMaker,
+                                                     TrackingMessagesHandler trackingMessagesHandler) {
+        return new CallbackQueryHandler(keyboardsMaker, userClient, trackingMessagesHandler, resourceBundle);
+    }
+
 }

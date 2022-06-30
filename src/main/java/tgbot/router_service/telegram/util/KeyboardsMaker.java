@@ -1,37 +1,39 @@
 package tgbot.router_service.telegram.util;
 
-import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
-@Component
 public class KeyboardsMaker {
     private final InlineKeyboardMarkup startKeyboard;
     private final InlineKeyboardMarkup administrationKeyboard;
     private final InlineKeyboardMarkup trackingKeyboard;
     private final InlineKeyboardMarkup userKeyboard;
 
-    public KeyboardsMaker() {
+    private final ResourceBundle resourceBundle;
+
+    public KeyboardsMaker(ResourceBundle resourceBundle) {
+        this.resourceBundle = resourceBundle;
         startKeyboard = setStartKeyboard();
         administrationKeyboard = setAdministrationKeyboard();
         trackingKeyboard = setTrackingKeyboard();
         userKeyboard = setUserKeyboard();
     }
 
-    public static InlineKeyboardMarkup setStartKeyboard() {
+    public InlineKeyboardMarkup setStartKeyboard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
         InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
         InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton();
 
-        inlineKeyboardButton1.setText("Add me to users list");
+        inlineKeyboardButton1.setText(resourceBundle.getString("keyboard.start.add.user"));
         inlineKeyboardButton1.setCallbackData("addUser");
-        inlineKeyboardButton2.setText("Administration");
+        inlineKeyboardButton2.setText(resourceBundle.getString("keyboard.start.administration"));
         inlineKeyboardButton2.setCallbackData("admin");
-        inlineKeyboardButton3.setText("Tracking");
+        inlineKeyboardButton3.setText(resourceBundle.getString("keyboard.start.tracking"));
         inlineKeyboardButton3.setCallbackData("track");
 
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
@@ -49,20 +51,20 @@ public class KeyboardsMaker {
         return inlineKeyboardMarkup;
     }
 
-    private static InlineKeyboardMarkup setTrackingKeyboard() {
+    private InlineKeyboardMarkup setTrackingKeyboard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
         InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
         InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton();
         InlineKeyboardButton inlineKeyboardButton4 = new InlineKeyboardButton();
 
-        inlineKeyboardButton1.setText("Create Tracking");
+        inlineKeyboardButton1.setText(resourceBundle.getString("keyboard.tracking.create"));
         inlineKeyboardButton1.setCallbackData("createTracking");
-        inlineKeyboardButton2.setText("Update Tracking");
+        inlineKeyboardButton2.setText(resourceBundle.getString("keyboard.tracking.update"));
         inlineKeyboardButton2.setCallbackData("updateTracking");
-        inlineKeyboardButton3.setText("Delete Tracking");
+        inlineKeyboardButton3.setText(resourceBundle.getString("keyboard.tracking.delete"));
         inlineKeyboardButton3.setCallbackData("deleteTracking");
-        inlineKeyboardButton4.setText("Close Tracking");
+        inlineKeyboardButton4.setText(resourceBundle.getString("keyboard.tracking.close"));
         inlineKeyboardButton4.setCallbackData("closeTracking");
 
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
@@ -79,20 +81,20 @@ public class KeyboardsMaker {
         return inlineKeyboardMarkup;
     }
 
-    private static InlineKeyboardMarkup setAdministrationKeyboard() {
+    private InlineKeyboardMarkup setAdministrationKeyboard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
         InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
         InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton();
         InlineKeyboardButton inlineKeyboardButton4 = new InlineKeyboardButton();
 
-        inlineKeyboardButton1.setText("Users");
+        inlineKeyboardButton1.setText(resourceBundle.getString("keyboard.administration.users"));
         inlineKeyboardButton1.setCallbackData("users");
-        inlineKeyboardButton2.setText("Teams");
+        inlineKeyboardButton2.setText(resourceBundle.getString("keyboard.administration.teams"));
         inlineKeyboardButton2.setCallbackData("teams");
-        inlineKeyboardButton3.setText("Tasks");
+        inlineKeyboardButton3.setText(resourceBundle.getString("keyboard.administration.tasks"));
         inlineKeyboardButton3.setCallbackData("tasks");
-        inlineKeyboardButton4.setText("Reports");
+        inlineKeyboardButton4.setText(resourceBundle.getString("keyboard.administration.reports"));
         inlineKeyboardButton4.setCallbackData("reports");
 
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
@@ -109,7 +111,7 @@ public class KeyboardsMaker {
         return inlineKeyboardMarkup;
     }
 
-    private static InlineKeyboardMarkup setUserKeyboard() {
+    private InlineKeyboardMarkup setUserKeyboard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
         InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
