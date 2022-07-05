@@ -7,7 +7,7 @@ import tgbot.users.service.*;
 
 public class TeamClient extends WebServiceGatewaySupport {
 
-    @Value("${clients.server.uri}")
+    @Value("${clients.users_service.address}")
     private String SERVER_URI;
 
     @Value("${clients.namespace.uri}")

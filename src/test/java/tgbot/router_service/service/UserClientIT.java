@@ -3,6 +3,7 @@ package tgbot.router_service.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import tgbot.router_service.config.UsersServiceClientsConfiguration;
 import tgbot.users.service.GetAllUsersResponse;
 import tgbot.users.service.GetBooleanResponse;
 import tgbot.users.service.GetUserResponse;
@@ -12,7 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest(classes = UsersServiceClientsConfiguration.class)
 class UserClientIT {
 
     @Autowired

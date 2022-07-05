@@ -19,23 +19,23 @@ public class TrackingUtil {
         this.trackingClient = trackingClient;
     }
 
-    private List<Tracking> getUserTrackings(long user) {
-        List<Tracking> userTrackings = new ArrayList<>();
-        List<Tracking> trackings = trackingClient.getAllTrackings();
-        for (Tracking tracking: trackings) {
+    private List<Tracking> getUserTracking(long user) {
+        List<Tracking> userTracking = new ArrayList<>();
+        List<Tracking> allTracking = trackingClient.getAllTracking();
+        for (Tracking tracking: allTracking) {
             if (tracking.getUser() == user && tracking.getStartTime().toLocalDate().isEqual(LocalDate.now())) {
-                userTrackings.add(tracking);
+                userTracking.add(tracking);
             }
         }
-        return userTrackings;
+        return userTracking;
     }
 
     public InlineKeyboardMarkup setTrackingListKeyBoard(long user) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        List<Tracking> trackings = getUserTrackings(user);
+        List<Tracking> allTracking = getUserTracking(user);
 
-        for (Tracking tracking: trackings) {
+        for (Tracking tracking: allTracking) {
             List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
             InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
             inlineKeyboardButton1.setText(tracking.getTrackingNote());

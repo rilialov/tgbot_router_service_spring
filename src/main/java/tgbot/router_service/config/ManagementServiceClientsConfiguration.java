@@ -10,7 +10,7 @@ import tgbot.router_service.service.TrackingClient;
 @Configuration
 public class ManagementServiceClientsConfiguration {
 
-    @Value("${clients.server.address}")
+    @Value("${clients.management_service.address}")
     private String SERVER_ADDRESS;
 
     @Bean

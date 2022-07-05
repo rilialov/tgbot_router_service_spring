@@ -10,7 +10,7 @@ import tgbot.router_service.service.UserClient;
 @Configuration
 public class UsersServiceClientsConfiguration {
 
-    @Value("${user.configuration.uri}")
+    @Value("${users_service.configuration.uri}")
     private String DEFAULT_URI;
 
     @Bean

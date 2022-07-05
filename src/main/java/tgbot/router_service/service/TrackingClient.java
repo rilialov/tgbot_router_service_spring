@@ -11,7 +11,7 @@ public class TrackingClient {
 
     private WebClient webClient;
 
-    private static final String TRACKINGS_URI = "/trackings/";
+    private static final String TRACKING_URI = "/tracking/";
 
     public void setParameters(String address) {
         webClient = WebClient.create(address);
@@ -20,7 +20,7 @@ public class TrackingClient {
     public Tracking getTracking(String id) {
         return webClient
                 .get()
-                .uri(TRACKINGS_URI + id)
+                .uri(TRACKING_URI + id)
                 .retrieve()
                 .bodyToMono(Tracking.class)
                 .onErrorResume(WebClientResponseException.class,
@@ -28,10 +28,10 @@ public class TrackingClient {
                 .block();
     }
 
-    public List<Tracking> getAllTrackings() {
+    public List<Tracking> getAllTracking() {
         return webClient
                 .get()
-                .uri(TRACKINGS_URI)
+                .uri(TRACKING_URI)
                 .retrieve()
                 .bodyToFlux(Tracking.class)
                 .collectList()
@@ -41,7 +41,7 @@ public class TrackingClient {
     public Tracking createTracking(Tracking tracking) {
         return webClient
                 .post()
-                .uri(TRACKINGS_URI)
+                .uri(TRACKING_URI)
                 .body(Mono.just(tracking), Tracking.class)
                 .retrieve()
                 .bodyToMono(Tracking.class)
@@ -51,7 +51,7 @@ public class TrackingClient {
     public void updateTracking(String id, Tracking tracking) {
         webClient
                 .put()
-                .uri(TRACKINGS_URI + id)
+                .uri(TRACKING_URI + id)
                 .body(Mono.just(tracking), Tracking.class)
                 .retrieve()
                 .bodyToMono(Void.class)
@@ -61,7 +61,7 @@ public class TrackingClient {
     public void deleteTracking(long id) {
         webClient
                 .delete()
-                .uri(TRACKINGS_URI + id)
+                .uri(TRACKING_URI + id)
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();
