@@ -1,5 +1,7 @@
 package tgbot.router_service.telegram;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
@@ -7,12 +9,15 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import tgbot.router_service.config.TelegramBotConfiguration;
 import tgbot.router_service.telegram.handlers.CallbackQueryHandler;
 import tgbot.router_service.telegram.handlers.MessageHandler;
 
 @Service
 @PropertySource("/telegram.properties")
 public class TelegramBot extends TelegramLongPollingBot {
+
+    private static final Logger logger = LoggerFactory.getLogger(TelegramBot.class);
 
     @Value( "${botName}" )
     private String botName;
@@ -46,7 +51,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             try {
                 execute(sendMessage);
             } catch (TelegramApiException e) {
-                e.printStackTrace();
+                logger.error("TelegramBot error: " + e.getMessage());
             }
 
         } else if (update.hasCallbackQuery()) {
@@ -54,7 +59,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             try {
                 execute(sendMessage);
             } catch (TelegramApiException e) {
-                e.printStackTrace();
+                logger.error("TelegramBot error: " + e.getMessage());
             }
         }
     }

@@ -43,6 +43,7 @@ class TrackingClientIT {
         Tracking created = trackingClient.createTracking(tracking);
 
         assertEquals("Test Note", created.getTrackingNote());
+        assertEquals(1L, created.getUser());
     }
 
     @Test

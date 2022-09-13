@@ -11,7 +11,7 @@ public class TrackingClient {
 
     private WebClient webClient;
 
-    private static final String TRACKING_URI = "/tracking/";
+    private static final String TRACKING_URI = "/trackings/";
 
     public void setParameters(String address) {
         webClient = WebClient.create(address);

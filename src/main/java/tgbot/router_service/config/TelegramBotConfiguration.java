@@ -1,5 +1,7 @@
 package tgbot.router_service.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +23,8 @@ import java.util.ResourceBundle;
 
 @Configuration
 public class TelegramBotConfiguration {
+
+    private static final Logger logger = LoggerFactory.getLogger(TelegramBotConfiguration.class);
 
     private final UserClient userClient;
 
@@ -48,8 +52,9 @@ public class TelegramBotConfiguration {
         try {
             telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
             telegramBotsApi.registerBot(telegramBot);
+            logger.info("TelegramBot Started");
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error("TelegramBot starting failed: " + e.getMessage());
         }
         return telegramBotsApi;
     }
